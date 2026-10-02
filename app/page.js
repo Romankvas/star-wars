@@ -2,11 +2,10 @@
 
 import { useState } from 'react'
 
-const CATEGORIES = [
-  { key: 'films', icon: '◉', title: 'Фільми', description: 'Епізоди, режисери та дати прем’єр' },
-  { key: 'planets', icon: '◌', title: 'Планети', description: 'Світи далекої-далекої галактики' },
-  { key: 'people', icon: '✦', title: 'Люди', description: 'Герої, джедаї та мешканці галактики' },
-]
+const API_URL = 'http https://swapi.dev/api/films/1/'
+
+
+
 
 const CARD_FIELDS = {
   films: [['Режисер', 'director'], ['Дата виходу', 'release_date'], ['Епізод', 'episode_id']],
@@ -14,6 +13,15 @@ const CARD_FIELDS = {
   people: [['Зріст', 'height'], ['Стать', 'gender'], ['Рік народження', 'birth_year']],
 }
 
+export default function Home() {
+  const [cards, setCards] = useState([])
+
+async function getData(categoty){
+  const response = await  fetch(`${API_URL}/${categoty}`)
+  const data = await response.json()
+
+  setCards(data.results)
+}
 function getItemName(item, category) {
   return category === 'films' ? item.title : item.name
 }
@@ -23,49 +31,35 @@ function formatValue(value) {
 }
 
 
-    try {
-      const response = await fetch(`/api/star-wars/${category}`, { cache: 'no-store' })
-      const data = await response.json()
-      if (!response.ok) throw new Error(data.error || 'Не вдалося отримати дані.')
-      setItems(Array.isArray(data.results) ? data.results : [])
-      setStatus('success')
-    } catch (requestError) {
-      setItems([])
-      setError(requestError.message || 'Не вдалося отримати дані.')
-      setStatus('error')
-    }
-  }
 
-  const selected = CATEGORIES.find((category) => category.key === activeCategory)
 
   return (
-    <main className="star-wars-app">
-      <section className="hero" aria-labelledby="page-title">
-        <p className="eyebrow">GALACTIC ARCHIVES</p>
-        <h1 id="page-title">STAR WARS</h1>
-        <p className="hero-copy">Обери розділ .</p>
+    <main className="star-wars-app" min-h-screen bg-gray-900 text-white p-6>
+      <section className="page-title">
+     
+        <h1 id="page-title" className="text-center text-4xl font-bold text-yellow-300">STAR WARS</h1>
+   
       </section>
 
-      <section className="category-grid" aria-label="Розділи каталогу">
-        {CATEGORIES.map((category) => (
-          <button className={`category-card ${}>
-            <span className="category-icon" aria-hidden="true">{category.icon}</span>
-            <span className="category-title">{category.title}</span>
-            <span className="category-description">{category.description}</span>
-            <span className="category-action">Відкрити <span aria-hidden="true">→</span></span>
-          </button>
-        ))}
-      </section>
-
-      {selected && (
-        <section className="results" aria-live="polite" aria-labelledby="results-title">
-          <div className="results-heading">
-          
-              ))}
-            </div>
-          )}
-        </section>
-      )}
+      <div className="category-grid gap-4">
+          <button onClick={() => getData("films")} className="rounded" bg-yellow-300 px-6 py-4 font-bold text-black>Фільми</button>
+          <button onClick={() => getData("Planets")} className="rounded" bg-yellow-300 px-6 py-4 font-bold text-black>Планети</button>
+          <button onClick={() => getData("Humans")} className="rounded" bg-yellow-300 px-6 py-4 font-bold text-black>Люди</button>
+      </div>
+<div className="results max-w-6xl mx-auto gap-4"></div>
+    {cards.map((item, index) => (
+      <div key={index} className="card" rounded-lg bg-gray-800>
+        <h2 className="card-title"text-2xl font-bold>
+        {item.gender || item.title}
+          </h2>
+          <p className="card-copy" text-gray-400>
+          {category === 'films' && `item.title : ${item.gender}`}
+           {category === 'planets' && `item.title : ${item.director}`}
+           {category === 'Humans' && `item.title : ${item.climate}`}
+          </p>
+      </div>
+    ))}
     </main>
   )
 }
+  
