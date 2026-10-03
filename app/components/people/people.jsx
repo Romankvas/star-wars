@@ -4,20 +4,20 @@ import { useEffect, useState } from 'react'
 import DataCard from '../DataCard'
 import { fetchStarWars } from '../../lib/swapi'
 
-export default function Planets() {
-  const [planets, setPlanets] = useState([])
+export default function People() {
+  const [people, setPeople] = useState([])
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
 
-  async function loadPlanets() {
+  async function loadPeople() {
     setLoading(true)
     setError('')
 
     try {
-      const results = await fetchStarWars('planets')
-      setPlanets(results)
+      const results = await fetchStarWars('people')
+      setPeople(results)
     } catch (err) {
-      setPlanets([])
+      setPeople([])
       setError(err.message)
     } finally {
       setLoading(false)
@@ -25,11 +25,11 @@ export default function Planets() {
   }
 
   useEffect(() => {
-    loadPlanets()
+    loadPeople()
   }, [])
 
   if (loading) {
-    return <p className="rounded-xl border border-sky-200/20 bg-[rgba(15,20,32,0.72)] p-7 text-center text-sw-muted">Завантажуємо планети…</p>
+    return <p className="rounded-xl border border-sky-200/20 bg-[rgba(15,20,32,0.72)] p-7 text-center text-sw-muted">Завантажуємо персонажів…</p>
   }
 
   if (error) {
@@ -38,7 +38,7 @@ export default function Planets() {
         <p className="mb-4">{error}</p>
         <button
           type="button"
-          onClick={loadPlanets}
+          onClick={loadPeople}
           className="cursor-pointer rounded-lg border border-sw-yellow px-4 py-2.5 text-sw-yellow"
         >
           Спробувати ще
@@ -51,23 +51,23 @@ export default function Planets() {
     <section>
       <div className="mb-6 flex flex-col items-start justify-between gap-5 md:flex-row md:items-end">
         <div>
-          <p className="mb-2 text-[0.73rem] font-extrabold tracking-[0.22em] text-sw-yellow">SWAPI / PLANETS</p>
-          <h2 className="m-0 text-[clamp(2rem,5vw,3rem)]">Планети</h2>
+          <p className="mb-2 text-[0.73rem] font-extrabold tracking-[0.22em] text-sw-yellow">SWAPI / PEOPLE</p>
+          <h2 className="m-0 text-[clamp(2rem,5vw,3rem)]">Люди</h2>
         </div>
         <p className="whitespace-nowrap rounded-full border border-sw-blue/35 px-3 py-2 text-sm text-sw-blue">
-          {planets.length} карток
+          {people.length} карток
         </p>
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {planets.map((planet) => (
+        {people.map((person) => (
           <DataCard
-            key={planet.name}
-            mark="PLANET"
-            title={planet.name}
+            key={person.name}
+            mark="PERSON"
+            title={person.name}
             fields={[
-              ['Клімат', planet.climate],
-              ['Рельєф', planet.terrain],
-              ['Населення', planet.population],
+              ['Зріст', person.height],
+              ['Стать', person.gender],
+              ['Рік народження', person.birth_year],
             ]}
           />
         ))}
